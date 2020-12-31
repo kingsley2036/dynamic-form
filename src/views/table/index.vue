@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <el-button @click="dialogVisible = true">新增</el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -28,23 +29,49 @@
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column
+        class-name="status-col"
+        label="Status"
+        width="110"
+        align="center"
+      >
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{
+            scope.row.status
+          }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column
+        align="center"
+        prop="created_at"
+        label="Display_time"
+        width="200"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.display_time }}</span>
         </template>
       </el-table-column>
     </el-table>
+    <div class="dialog">
+      <el-dialog :visible.sync="dialogVisible" width="50%" title="新增">
+        <base-form
+          :inline="false"
+          :form-items="formItems"
+          :api="formApi"
+          cancle="true"
+          @after-submit="showTableData"
+          @cancle="hideDIalog"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import { getList } from '@/api/table'
+import { formApi } from '@/api/example'
+import { formItems } from './formItem'
 
 export default {
   filters: {
@@ -60,20 +87,35 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      dialogVisible: false,
+      formApi,
+      formItems,
+      border: true
+
     }
   },
+  computed: {},
   created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      getList().then((response) => {
         this.list = response.data.items
         this.listLoading = false
       })
+    },
+    showTableData(res) {
+      this.tableData = res.tableData
+    },
+    hideDIalog() {
+      this.dialogVisible = false
     }
   }
 }
 </script>
+<style lang="scss">
+
+</style>

@@ -148,14 +148,15 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/baseform',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'index',
+        name: '动态表单',
+        component: () => import('@/views/example/index'),
+        meta: { title: 'Form', icon: 'form' }
       }
     ]
   },

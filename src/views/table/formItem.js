@@ -6,7 +6,6 @@ var checkSim = (rule, value, callback) => {
     callback('手机格式不对')
   }
 }
-
 export const formItems = [
   {
     tag: 'input',
@@ -65,6 +64,18 @@ export const formItems = [
         { value: '1', label: '男' },
         { value: '2', label: '女' }
       ]
+    }
+  },
+  {
+    slot: 'slotInput',
+    itemAttrs: {
+      label: '插槽输入框',
+      'label-width': '120px',
+      style: { width: '400px' }
+    },
+    attrs: {
+      key: 'slotInput',
+      placeholder: '请输入SIM号'
     }
   }
 

@@ -20,14 +20,13 @@
         :prop="item.attrs.key"
       >
         <!--将表单内部的数据通过作用域插槽传给外部-->
-        <slot v-if="item.slot" :name="item.slot" :scope="Model" />
+        <slot v-if="item.slot" :name="item.slot" :scope="Model" v-bind="item.attrs || {}" />
         <component
           :is="item.tag"
           v-else
           v-model="Model[item.attrs.key]"
           :class="item.itemAttrs.className"
           v-bind="item.attrs || {}"
-          v-on="item.listeners || {}"
         />
       </el-form-item>
     </template>
@@ -64,11 +63,11 @@ export default {
     },
     reset: {
       type: Boolean,
-      default: true
+      default: false
     },
     cancle: {
       type: [Boolean, String],
-      default: false
+      default: true
     },
     // 接口函数
     api: {
@@ -114,7 +113,7 @@ export default {
       return this.$attrs['status-icon'] !== false
     },
     inline() {
-      return this.$attrs.inline !== false // 不太理解为什么不直接使用传入的props
+      return this.$attrs.inline !== false
     }
   },
   watch: {
@@ -168,6 +167,7 @@ export default {
     // 合并Model对象
     mergeModel() {
       Object.assign(this.Model, this.mergeForm)
+      // Object.assign(this.originModel, this.mergeForm)
     },
 
     // 提交按钮
@@ -183,8 +183,11 @@ export default {
     },
     handleReset() {
       this.Model = JSON.parse(JSON.stringify(this.originModel))
+      this.$refs[form].clearValidate()
     },
+
     handleCancle() {
+      this.handleReset()
       this.$emit('cancle')
     }
   }

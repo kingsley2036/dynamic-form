@@ -54,15 +54,20 @@
       </el-table-column>
     </el-table>
     <div class="dialog">
+
       <el-dialog :visible.sync="dialogVisible" width="50%" title="新增">
         <base-form
           :inline="false"
           :form-items="formItems"
           :api="formApi"
-          cancle="true"
           @after-submit="showTableData"
           @cancle="hideDIalog"
-        />
+        >
+          <template v-slot:slotInput>
+            <el-input v-model="mergeForm.slotInput" @focus="myfocus">插槽输入框
+            </el-input>
+          </template>
+        </base-form>
       </el-dialog>
     </div>
   </div>
@@ -91,7 +96,10 @@ export default {
       dialogVisible: false,
       formApi,
       formItems,
-      border: true
+      myfocuscopy: null,
+      mergeForm: {
+        slotInput: ''
+      }
 
     }
   },
@@ -111,8 +119,13 @@ export default {
       this.tableData = res.tableData
     },
     hideDIalog() {
+      this.mergeForm = { slotInput: '' }
       this.dialogVisible = false
+    },
+    myfocus() {
+      console.log('onFocus')
     }
+
   }
 }
 </script>

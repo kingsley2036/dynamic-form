@@ -10,9 +10,9 @@
       resetcontext="取消"
       @after-submit="showTableData"
     >
-      <template v-slot:slotCheckBox="slotBox">
-        {{ slotBox.scope }}
-        <el-checkbox v-model="mergeForm.slotCheckBox">插槽复选框1</el-checkbox>
+      <template v-slot:slotinput>
+        <el-input v-model="mergeForm.slotinput" />
+        <!-- <el-checkbox v-model="mergeForm.slotinput">插槽复选框1</el-checkbox> -->
       </template>
     </base-form>
   </div>
@@ -37,7 +37,7 @@ export default {
       columns,
       formItems,
       mergeForm: {
-        slotCheckBox: ''
+        slotinput: ''
       },
       tableData: [],
       showTableHeader: false
@@ -60,12 +60,12 @@ export default {
       return this.formItems.find(
         formItem => formItem.attrs && formItem.attrs.key === key
       )
+    },
+    async getInfo() {
+      const [res1, res2] = await Promise.all([radioGroup(), cascader()])
+      this.findItem('asyncRadio').attrs.options = res1.options
+      this.findItem('cascader').attrs.options = res2.options
     }
-    // async getInfo() {
-    //   const [res1, res2] = await Promise.all([radioGroup(), cascader()])
-    //   this.findItem('asyncRadio').attrs.options = res1.options
-    //   this.findItem('cascader').attrs.options = res2.options
-    // }
   }
 }
 </script>

@@ -135,10 +135,14 @@ export const formItems = [
       label: '复选框'
     }
   },
+
   {
-    slot: 'slotCheckBox',
+    slot: 'slotinput',
     itemAttrs: {
-      label: '插槽复选框'
+      label: '插槽输入框'
+    },
+    attrs: {
+      key: 'slotinput'
     }
   },
   {

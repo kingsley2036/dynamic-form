@@ -1,11 +1,12 @@
-var checkSim = (rule, value, callback) => {
-  const regStr = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
-  if (regStr.test(value)) {
-    callback()
-  } else {
-    callback('手机格式不对')
-  }
-}
+// var checkSim = (rule, value, callback) => {
+//   const regStr = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
+//   if (regStr.test(value)) {
+//     callback()
+//   } else {
+//     callback('手机格式不对')
+//   }
+// }
+const testClass = ['testclass']
 export const formItems = [
   {
     tag: 'input',
@@ -14,10 +15,10 @@ export const formItems = [
       'label-width': '120px',
       rules: [{ required: true, message: '自定义设备编号不能为空', trigger: 'blur' }],
       style: { width: '400px' },
-      className: { test: 'testclass' }
+      className: testClass
     },
     attrs: {
-      key: 'id',
+      key: 'deviceid',
       value: '',
       placeholder: '厂家原始设备ID'
     }
@@ -41,8 +42,8 @@ export const formItems = [
       label: 'SIM卡',
       'label-width': '120px',
       style: { width: '400px' },
-      rules: [{ required: true, message: 'SIM卡不能为空', trigger: 'blur' },
-        { validator: checkSim, trigger: 'blur' }
+      rules: [{ required: true, message: 'SIM卡不能为空', trigger: 'blur' }
+        // { validator: checkSim, trigger: 'blur' }
       ]
     },
     attrs: {
@@ -75,7 +76,7 @@ export const formItems = [
     },
     attrs: {
       key: 'slotInput',
-      placeholder: '请输入SIM号'
+      placeholder: '请输入'
     }
   }
 

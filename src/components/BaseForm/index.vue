@@ -1,15 +1,11 @@
 <template>
-
   <el-form
     :ref="form"
     class="base-form"
     v-bind="$attrs"
     :model="Model"
-    :api="api"
     :show-message="showMessage"
     :status-icon="statusIcon"
-    :inline="inline"
-    label-position="right"
   >
     <template v-for="(item, index) in _formItems">
       <el-form-item
@@ -20,7 +16,13 @@
         :prop="item.attrs.key"
       >
         <!--将表单内部的数据通过作用域插槽传给外部-->
-        <slot v-if="item.slot" :name="item.slot" :scope="Model" v-bind="item.attrs || {}" />
+        <slot
+          v-if="item.slot"
+          :name="item.slot"
+          :scope="Model"
+          v-bind="item.attrs || {}"
+          :value="Model[item.attrs.key]"
+        />
         <component
           :is="item.tag"
           v-else
@@ -31,17 +33,18 @@
       </el-form-item>
     </template>
 
-    <el-form-item v-if="submit || reset" :style="btnStyle">
+    <div v-if="submit || reset" :style="btnStyle">
       <el-button v-if="submit" type="primary" @click="handleSubmit">{{
-        $attrs.submitcontext || "确认"
+        $attrs.submitcontext || '确认'
       }}</el-button>
       <el-button v-if="reset" @click="handleReset">{{
-        $attrs.resetContext || "重置"
+        $attrs.resetContext || '重置'
       }}</el-button>
       <el-button v-if="cancle" @click="handleCancle">{{
-        $attrs.resetContext || "取消"
+        $attrs.cancleContext || '取消'
       }}</el-button>
-    </el-form-item>
+      <slot name="footer" :scope="Model" />
+    </div>
   </el-form>
 </template>
 
@@ -83,7 +86,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          'display': 'flex',
+          display: 'flex',
           'justify-content': 'flex-end'
         }
       }
@@ -101,7 +104,7 @@ export default {
     _formItems() {
       // this.Model中的值改变触发computed
       let _formItems = []
-      _formItems = this.formItems.map(item =>
+      _formItems = this.formItems.map((item) =>
         this.computeFormItem(item, this.Model)
       )
       return _formItems
@@ -111,16 +114,13 @@ export default {
     },
     statusIcon() {
       return this.$attrs['status-icon'] !== false
-    },
-    inline() {
-      return this.$attrs.inline !== false
     }
   },
   watch: {
     // 使用watch观察父组件传入的formItems,初始化Model对象(只调用一次)
     formItems: {
       handler() {
-        this.formItems.forEach(formItem => {
+        this.formItems.forEach((formItem) => {
           if (!formItem.attrs || !formItem.attrs.key) return // 跳过没有key的属性(插槽)
           this.$set(
             this.Model,
@@ -141,8 +141,7 @@ export default {
       immediate: true
     }
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     computeFormItem(formItem, Model) {
       const item = { ...formItem }
@@ -154,7 +153,9 @@ export default {
       // 继承基类的属性
       item.attrs = Object.assign({}, basicItem.attrs, item.attrs)
       // 获取动态 Attributes
-      if (item.getAttrs) { item.attrs = Object.assign(item.attrs, item.getAttrs(Model)) }
+      if (item.getAttrs) {
+        item.attrs = Object.assign(item.attrs, item.getAttrs(Model))
+      }
       // 条件渲染
       item._ifRender = item.ifRender ? item.ifRender(Model) : true
       // 防止表单提交时存在多余 key
@@ -167,13 +168,13 @@ export default {
     // 合并Model对象
     mergeModel() {
       Object.assign(this.Model, this.mergeForm)
-      // Object.assign(this.originModel, this.mergeForm)
+      Object.assign(this.originModel, this.mergeForm) // 用于重置Model对象
     },
 
     // 提交按钮
     handleSubmit() {
       // 调用element的校验,后续可以实现自己的校验组件
-      this.$refs[form].validate(async valid => {
+      this.$refs[form].validate(async(valid) => {
         if (valid) {
           // api通过props传入
           const res = await this.api(this.Model)
@@ -185,7 +186,6 @@ export default {
       this.Model = JSON.parse(JSON.stringify(this.originModel))
       this.$refs[form].clearValidate()
     },
-
     handleCancle() {
       this.handleReset()
       this.$emit('cancle')

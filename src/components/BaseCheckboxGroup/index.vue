@@ -15,6 +15,7 @@ export default {
   name: 'BaseCheckboxGroup',
   props: {
     value: {
+      type: Array,
       default: () => []
     }
   },

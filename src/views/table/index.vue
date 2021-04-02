@@ -52,23 +52,32 @@
           <span>{{ scope.row.display_time }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="110" align="center">
+        <template slot-scope="{row}">
+          <el-button @click="handleUpdate(row.id)">修改</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="dialog">
-
       <el-dialog :visible.sync="dialogVisible" width="50%" title="新增">
         <base-form
-          :inline="false"
           :form-items="formItems"
           :api="formApi"
+          :merge-form="mergeForm"
+          reset
           @after-submit="showTableData"
           @cancle="hideDIalog"
         >
-          <template v-slot:slotInput>
-            <el-input v-model="mergeForm.slotInput" @focus="myfocus">插槽输入框
+          <template v-slot:slotInput="{scope}">
+            <el-input v-model="scope.slotInput" @focus="myfocus">插槽输入框
             </el-input>
           </template>
+          <!-- <template v-slot:footer="{scope}">
+            <el-button type="primary" @click="handleClick(scope)">111</el-button>
+          </template> -->
         </base-form>
       </el-dialog>
+      <Update ref="update" />
     </div>
   </div>
 </template>
@@ -77,7 +86,7 @@
 import { getList } from '@/api/table'
 import { formApi } from '@/api/example'
 import { formItems } from './formItem'
-
+import Update from './update'
 export default {
   filters: {
     statusFilter(status) {
@@ -89,6 +98,9 @@ export default {
       return statusMap[status]
     }
   },
+  components: {
+    Update
+  },
   data() {
     return {
       list: null,
@@ -98,7 +110,8 @@ export default {
       formItems,
       myfocuscopy: null,
       mergeForm: {
-        slotInput: ''
+        id: '11',
+        slotInput: '' // 通过插槽插入的组件
       }
 
     }
@@ -119,16 +132,25 @@ export default {
       this.tableData = res.tableData
     },
     hideDIalog() {
-      this.mergeForm = { slotInput: '' }
+      // this.mergeForm = { slotInput: '' }
       this.dialogVisible = false
     },
     myfocus() {
       console.log('onFocus')
+    },
+    handleClick(scope) {
+      console.log(scope, 'scope')
+      console.log('1111')
+    },
+    handleUpdate(id) {
+      this.$refs.update.show(id)
     }
-
   }
 }
 </script>
 <style lang="scss">
+.testclass{
+  // border: 1px solid rgb(, green, blue);
 
+}
 </style>

@@ -186,6 +186,7 @@ export default {
       this.Model = JSON.parse(JSON.stringify(this.originModel))
       this.$refs[form].clearValidate()
     },
+
     handleCancle() {
       this.handleReset()
       this.$emit('cancle')

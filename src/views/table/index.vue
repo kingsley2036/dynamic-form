@@ -59,6 +59,7 @@
       </el-table-column>
     </el-table>
     <div class="dialog">
+
       <el-dialog :visible.sync="dialogVisible" width="50%" title="新增">
         <base-form
           :form-items="formItems"
@@ -145,6 +146,7 @@ export default {
     handleUpdate(id) {
       this.$refs.update.show(id)
     }
+
   }
 }
 </script>
